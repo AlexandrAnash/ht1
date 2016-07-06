@@ -16,7 +16,7 @@ const articles = [
         }, 
         articleTextBody: [
             `Всё началось праздничным январским вечером. Мы с друзьями собрались, чтобы отметить Рождество, приготовить вкусный ужин и посмотреть кино. С другого конца стола я услышала:`, 
-            `— Давайте летом поедем туда!
+            `— Давайте летом поедем туда!<br>
             — Куда? — спросила я.`,
             `Вместо ответа мне показали фотографии. Я ещё не знала, что это за место, в какой точке Земли находится, как называется, но уже понимала — еду!`,
             `За этим последовали обычные хлопоты подготовки к поездке: получение визы, приобретение и сбор всего необходимого, поиски информации и составление маршрутов.`,
@@ -272,3 +272,59 @@ const articles = [
 		type: undefined
 	}
 }];
+function renderTextBody(articleTextBody) {
+	let html = ''
+	articleTextBody.forEach((item)=>{
+		html += `<p>${item}</p>`
+	})
+	return html;
+}
+function getFeatureContent(feature) {
+	let html = ''
+	if (feature.image.length > 0) {
+		feature.image.forEach((item) => {
+			html += `<img class="article__feature-image"
+						  srcset="article-images/${item}">`
+		})
+	}
+	if (feature.text != '') {
+		html += `<div class="article__feature-text">${feature.text}</div>`
+	}
+	return html;
+}
+
+function renderArticle(item) {
+
+    return `
+		<div class="article">
+            <div class="article__header">
+				<img class="article__header-image" 
+					 srcset="article-images/${item.header.image}">
+                <h1 class="article__header-firstText">${item.header.context.firstText}</h1>  
+                <h2 class="article__header-secondText">${item.header.context.secondText}</h2>  
+                <div class="article__header-link">${item.header.context.link}</div>  
+                <div class="article__header-author">${item.header.context.author}</div>  
+            </div>
+            <div class="article__body">
+                <div class="article__body-textBody">
+					${renderTextBody(item.articleTextBody)}
+				</div>
+                <div class="article__features">
+                    <div class="article__feature-top">
+						${getFeatureContent(item.featureTop)}
+					</div>
+                    <div class="article__feature-bottom">
+						${getFeatureContent(item.featureBottom)}
+					</div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+/// init app
+document.addEventListener('DOMContentLoaded', () => {
+     var itemsHtml = articles.map(renderArticle).join('');
+    var eml = document.querySelector('.articles');
+    eml.innerHTML = itemsHtml;
+});
