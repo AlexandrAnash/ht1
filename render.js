@@ -342,7 +342,7 @@ function renderArticle(item, keyItem) {
 				<div class="article-header__content">
 					<div class="article-header__middle">
 						<h1 class="article-header__content-firstText">${item.header.context.firstText}</h1>  
-						<h3 class="article-header__content-secondText">${item.header.context.secondText}</h3>  
+						<h3 class="article-header__content-secondText ${keyItem === 0 ? 'font-size__secondText-first' : ''}">${item.header.context.secondText}</h3>  
 						<div class="article-header__content-footer">
 							<div class="article-header__content-link">
 								<a href="${item.header.context.link}">${item.header.context.link}</a>
