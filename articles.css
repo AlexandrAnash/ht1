@@ -34,6 +34,12 @@ body {
 }
 .article-header__content-secondText {
     letter-spacing: 5px;
+    font-size: 30px;
+}
+.font-size__secondText-first {
+    font-size: 18px;
+}
+.article-header__content-secondText:first-child {
     font-size: 18px;
 }
 .article__header {
@@ -61,15 +67,10 @@ body {
     letter-spacing: 15px;
     margin: 0;
 }
-.article-header__content-secondText {
-    letter-spacing: 5px;
-}
 .article-header__content-link a{
     
     text-decoration: blink;
     color: inherit;
-}
-.article-header__content-author {
 }
 .article__context {
     padding: 0 40px;
