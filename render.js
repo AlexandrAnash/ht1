@@ -6,12 +6,15 @@ const typesFeatureText = {
 const articles = [
     {
         header: {
-            image: "article-1__header.jpeg",  
+            image: "article-1__header.jpeg",
+			imageFixed: true,  
             context: {
                 firstText: "ФАРЕРЫ", 
-                secondText: "ПЕРВЫЙ РАЗ В ИСТОРИИ", 
-                link: "http://silavetra.com/faroeislands", 
-                author: "Алиса Сорокина, Яна Сорокина, Ольга Цапко — команда «Силы Ветра»"
+                secondText: "ПЕРВЫЙ РАЗ В ИСТОРИИ",
+				link: "",
+				author: "" 
+                // link: "http://silavetra.com/faroeislands", 
+                // author: "Алиса Сорокина, Яна Сорокина, Ольга Цапко — команда «Силы Ветра»"
             }
         }, 
         articleTextBody: [
@@ -104,6 +107,7 @@ const articles = [
             "article-4__featureTop-1.jpeg",
             "article-4__featureTop-2.jpeg"
         ],
+		isCenter: true,
 		text: "",
 		type: undefined
 	},
@@ -272,9 +276,27 @@ const articles = [
 		type: undefined
 	}
 }];
-function renderTextBody(articleTextBody) {
+function checkType(type) {
+	let cssClass = '';
+	cssClass = type === typesFeatureText.small ? ' text-small' : '';
+	cssClass += type === typesFeatureText.bold ? ' text-bold' : '';
+	return cssClass;
+}
+function checkHideFeature(isHide) {
+	return isHide ? ` hide-768` : '';
+}
+function renderTextBody(articleTextBody, topFeature) {
 	let html = ''
-	articleTextBody.forEach((item)=>{
+	let additionalTag = '';
+	let centerKey
+	if (topFeature.isCenter) {
+		additionalTag = `<div class="article__feature article__feature-center article__feature-center-small">${getFeatureContent(topFeature)}</div>`;
+		 centerKey = Math.floor(articleTextBody.length / 2);
+	}
+	articleTextBody.forEach((item, key)=>{
+		if (centerKey && centerKey === key) {
+			html += additionalTag;
+		}
 		html += `<p>${item}</p>`
 	})
 	return html;
@@ -293,29 +315,36 @@ function getFeatureContent(feature) {
 	return html;
 }
 
-function renderArticle(item) {
+function renderArticle(item, keyItem) {
 
     return `
 		<div class="article">
             <div class="article__header">
-				<img class="article__header-image" 
-					 srcset="article-images/${item.header.image}">
-                <h1 class="article__header-firstText">${item.header.context.firstText}</h1>  
-                <h2 class="article__header-secondText">${item.header.context.secondText}</h2>  
-                <div class="article__header-link">${item.header.context.link}</div>  
-                <div class="article__header-author">${item.header.context.author}</div>  
-            </div>
-            <div class="article__body">
-                <div class="article__body-textBody">
-					${renderTextBody(item.articleTextBody)}
+				<div class="article__header-image ${item.header.imageFixed ? 'image-fixed' : ''}" 
+					 style="background-image:url('article-images/${item.header.image}')">
 				</div>
-                <div class="article__features">
-                    <div class="article__feature-top">
-						${getFeatureContent(item.featureTop)}
+				<div class="article-header__content">
+					<div class="article-header__middle">
+						<h1 class="article-header__content-firstText">${item.header.context.firstText}</h1>  
+						<h3 class="article-header__content-secondText">${item.header.context.secondText}</h3>  
+						<div class="article-header__content-footer">
+							<div class="article-header__content-link">
+								<a href="${item.header.context.link}">${item.header.context.link}</a>
+							</div>  
+							<div class="article-header__content-author">${item.header.context.author}</div>  
+						</div>  
 					</div>
-                    <div class="article__feature-bottom">
-						${getFeatureContent(item.featureBottom)}
-					</div>
+				</div>
+			</div>
+            <div class="article__context">
+                <div class="article__feature article__feature-top ${checkType(item.featureTop.type), checkHideFeature(item.featureTop.isCenter)}">
+					${getFeatureContent(item.featureTop)}
+                </div>
+                <div class="article__text ${keyItem === 0 ? 'upFirstLetter' : ''}">
+					${renderTextBody(item.articleTextBody, item.featureTop)}
+				</div>
+                <div class="article__feature article__feature-bottom ${checkType(item.featureBottom.type), checkHideFeature(item.featureTop.isCenter)}">
+					${getFeatureContent(item.featureBottom)}
                 </div>
             </div>
         </div>
@@ -328,3 +357,8 @@ document.addEventListener('DOMContentLoaded', () => {
     var eml = document.querySelector('.articles');
     eml.innerHTML = itemsHtml;
 });
+
+////TODO:
+// добавить обработку озера
+// маленький экран доработать 
+// если успею ссылки поправить
