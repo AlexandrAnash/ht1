@@ -25,6 +25,7 @@ const articles = [
             `За этим последовали обычные хлопоты подготовки к поездке: получение визы, приобретение и сбор всего необходимого, поиски информации и составление маршрутов.`,
             `Вопрос о способе передвижения между островами перед нами не стоял. Две яхты были готовы к отплытию 26 июля 2015 года. Кстати говоря, мы были первыми, кто арендовал яхты на целую неделю. В нашем распоряжении была лоция с подробной информацией о маринах, течениях, ветрах, но никаких фотографий, описаний, отзывов и впечатлений других яхтсменов мы не нашли. Это дало нам прекрасный шанс почувствовать себя первооткрывателями.`
         ], 
+		isEmptyFeature: true,
         featureTop: {
             image: [], 
             text: "Пятнадцать человек и семь дней интригующей неизвестности. Все ждали той особенной свободы, присущей только северному морю на краю цивилизации.", 
@@ -40,8 +41,8 @@ const articles = [
         header: {
             image: "article-2__header.jpeg",  
             context: {
-                firstText: "ПЕРЕЛЁТ И ДОРОГА", 
-                secondText: "", 
+                firstText: "", 
+                secondText: "ПЕРЕЛЁТ И ДОРОГА", 
                 link: "", 
                 author: ""
             }
@@ -65,8 +66,8 @@ const articles = [
 	header: {
 		image: "article-3__header.jpeg",
 		context: {
-			firstText: "ПОГОДА",
-			secondText: "",
+			firstText: "",
+			secondText: "ПОГОДА",
 			link: "",
 			author: ""
 		}
@@ -90,8 +91,8 @@ const articles = [
 	header: {
 		image: "article-4__header.jpeg",
 		context: {
-			firstText: "МОРЕ",
-			secondText: "",
+			firstText: "",
+			secondText: "МОРЕ",
 			link: "",
 			author: ""
 		}
@@ -121,8 +122,8 @@ const articles = [
 	header: {
 		image: "article-5__header.jpeg",
 		context: {
-			firstText: "ПЕШИЕ ПОХОДЫ",
-			secondText: "",
+			firstText: "",
+			secondText: "ПЕШИЕ ПОХОДЫ",
 			link: "",
 			author: ""
 		}
@@ -228,12 +229,12 @@ const articles = [
 		image: "article-9__header.jpeg",
 		context: {
 			firstText: "",
-			secondText: "",
+			secondText: "МЕСТНЫЕ ЖИТЕЛИ И ПРОМЫСЕЛ",
 			link: "",
 			author: ""
 		}
 	},
-	articleTextHeader: "МЕСТНЫЕ ЖИТЕЛИ И ПРОМЫСЕЛ",
+	articleTextHeader: "",
 	articleTextBody: [
         `На стенах в домах фарерцев висят старые чёрно-белые фотографии, на которых всё большое семейство в вязаных свитерах с национальными узорами стоит рядом с убитым дельфином.`,
         `Различные организации по защите животных пытаются противостоять жестокому убийству. Вокруг островов постоянно курсирует корабль Общества охраны морской фауны и пытается физически помешать забою дельфинов. Однако фарерцы в ответ на агрессивное поведение защитников животных приняли закон, позволяющий применять силу против подобных судов. До сих пор каждый фаререц, которому ещё не довелось участвовать в охоте на чёрных дельфинов (гринд), мечтает об этом. Экспорт китового жира и мяса запрещён, весь улов идет в пищу в зимнее время года.`,
@@ -245,6 +246,7 @@ const articles = [
 		image: [
             "article-9__featureTop-1.jpeg"
         ],
+		isCenter: true,
 		text: "Чтобы понять этот обычай, нужно сюда приехать. Нужно посмотреть в глаза человеку, который рассказывает вам, что это традиция, а не развлечение. Это еда, способ выживания на земле, на которой ничего не растет, которая не может прокормить.",
 		type: typesFeatureText.small
 	},
@@ -258,8 +260,8 @@ const articles = [
 	header: {
 		image: "article-10__header.jpeg",
 		context: {
-			firstText: "КОМАНДА «СИЛЫ ВЕТРА»",
-			secondText: "",
+			firstText: "",
+			secondText: "КОМАНДА «СИЛЫ ВЕТРА»",
 			link: "",
 			author: ""
 		}
@@ -285,13 +287,17 @@ function checkType(type) {
 function checkHideFeature(isHide) {
 	return isHide ? ` hide-768` : '';
 }
-function renderTextBody(articleTextBody, topFeature) {
+function renderTextBody(articleTextBody, topFeature, emptyFeature) {
 	let html = ''
 	let additionalTag = '';
 	let centerKey
 	if (topFeature.isCenter) {
 		additionalTag = `<div class="article__feature article__feature-center article__feature-center-small">${getFeatureContent(topFeature)}</div>`;
-		 centerKey = Math.floor(articleTextBody.length / 2);
+		 centerKey = Math.ceil(articleTextBody.length / 2);
+	}
+	if (emptyFeature) {
+		additionalTag += `<div class="article__feature article__feature-center article__feature-center-small"></div>`;
+		centerKey = Math.ceil(articleTextBody.length / 2);
 	}
 	articleTextBody.forEach((item, key)=>{
 		if (centerKey && centerKey === key) {
@@ -314,13 +320,23 @@ function getFeatureContent(feature) {
 	}
 	return html;
 }
-
+function isEmptyFeature(feature) {
+	return feature.image.length === 0 && feature.text == '';
+}
+function isEmptyContext(item) {
+	return item.articleTextBody.length === 0 && isEmptyFeature(item.featureTop) && isEmptyFeature(item.featureBottom);
+}
+function isArticleTextHeader(articleTextHeader, isNegation) {
+	let check = (articleTextHeader && articleTextHeader == '');
+	check = isNegation === true ? !check : check;
+	return check ? '' : 'hide';
+}
 function renderArticle(item, keyItem) {
 
     return `
 		<div class="article">
-            <div class="article__header">
-				<div class="article__header-image ${item.header.imageFixed ? 'image-fixed' : ''}" 
+            <div class="article__header ${item.articleTextHeader ? 'article__header-w100' : ''}">
+				<div class="article__header-image  ${item.articleTextHeader ? 'article__header-w100' : ''} ${item.header.imageFixed ? 'image-fixed' : ''}" 
 					 style="background-image:url('article-images/${item.header.image}')">
 				</div>
 				<div class="article-header__content">
@@ -336,13 +352,19 @@ function renderArticle(item, keyItem) {
 					</div>
 				</div>
 			</div>
-            <div class="article__context">
-                <div class="article__feature article__feature-top ${checkType(item.featureTop.type), checkHideFeature(item.featureTop.isCenter)}">
+            <div class="article__context ${isEmptyContext(item) ? 'hide' : ''}">
+				<div class="article__text-header ${!item.articleTextHeader ? 'hide' : ''}">
+					<h2>${item.articleTextHeader}</h2>
+				</div>
+                <div class="article__feature article__feature-top ${checkType(item.featureTop.type)} ${checkHideFeature(item.featureTop.isCenter)} ${item.articleTextHeader ? 'hide-768' : ''}">
 					${getFeatureContent(item.featureTop)}
                 </div>
                 <div class="article__text ${keyItem === 0 ? 'upFirstLetter' : ''}">
-					${renderTextBody(item.articleTextBody, item.featureTop)}
+					${renderTextBody(item.articleTextBody, item.featureTop, item.isEmptyFeature)}
 				</div>
+				<div class="article__feature article__feature-top article__feature-top-bottom ${checkType(item.featureTop.type)} ${checkHideFeature(item.featureTop.isCenter)} ${!item.articleTextHeader ? 'hide-768' : ''}">
+					${getFeatureContent(item.featureTop)}
+                </div>
                 <div class="article__feature article__feature-bottom ${checkType(item.featureBottom.type), checkHideFeature(item.featureTop.isCenter)}">
 					${getFeatureContent(item.featureBottom)}
                 </div>
@@ -357,8 +379,3 @@ document.addEventListener('DOMContentLoaded', () => {
     var eml = document.querySelector('.articles');
     eml.innerHTML = itemsHtml;
 });
-
-////TODO:
-// добавить обработку озера
-// маленький экран доработать 
-// если успею ссылки поправить

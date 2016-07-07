@@ -29,10 +29,16 @@ body {
 .image-fixed {
     background-attachment: fixed;
 }
+.article__header-w100 {
+    height: 100vh;
+}
+.article-header__content-secondText {
+    letter-spacing: 5px;
+    font-size: 18px;
+}
 .article__header {
     position: relative;
     min-height: 80vh;
-    margin-bottom: 8vh;
 }
 .article:last-child .article__header {
     margin-bottom: 0;
@@ -45,6 +51,9 @@ body {
     bottom: 0;
     width: 100%;
     height: 100%;
+}
+.article__text-header {
+    margin: 0 auto;
 }
 .article-header__content-firstText {
     font-family: 'PT_Serif-Web-bold';
@@ -66,7 +75,10 @@ body {
     padding: 0 40px;
     width: 920px;
     margin: 0 auto;
-    position: relative
+    position: relative;
+    margin-top: 8vh;
+    margin-bottom: 10vh;
+    
 }
 .article__text {
     width: 55%;
@@ -90,7 +102,9 @@ body {
     font-family: 'PT_Serif-Web-bold';
     font-size: 18px;
 }
-
+.hide {
+    display: none;
+}
 .text-small {
     font-size: 12px;
 }
@@ -108,16 +122,27 @@ body {
 .article__feature-center-small {
     display: none;
 }
+.show-768 {
+    display: none;
+}
 .hide-768 {
     display: block;
 }
 .hide-320 {
     display: block;        
 }
-@media screen and (max-width: 768px) {
+
+.article__feature-top-bottom {
+    display: none;
+}
+@media screen and (max-width: 1280px) {
     .article__context {
         width: 90%;
         padding: 0 5%;
+    }
+
+    .article__text-header {
+        width: 80%;
     }
     .article__text {
         width: 80%;
@@ -130,7 +155,13 @@ body {
     .article__feature-center-small {
         display: block;
     }
+    .article__feature-top-bottom {
+        display: block;
+    }
     
+    .show-768 {
+        display: block
+    }
     .hide-768 {
         display: none;
     }
@@ -163,11 +194,31 @@ body {
     .hide-320 {
         display: none;        
     }
+    .article__header-image {
+        background-position: center;
+    }
     .text-bold {
         font-size: 12px;
     }
     .text-small {
         font-size: 12px;
     }
-
+    .article__feature {
+        width: 90%
+    }
+    .article__text {
+        width: 100%
+    }
+    .article__text-header {
+        width: 100%
+    }
+    .article-header__content-firstText {
+        font-size: 45px;
+        letter-spacing: 15px;
+    }
+    .article-header__content-secondText {
+        font-size: 20px;
+        letter-spacing: 5px;
+    }
+    
 }
